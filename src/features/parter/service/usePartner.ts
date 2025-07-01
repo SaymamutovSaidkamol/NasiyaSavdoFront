@@ -1,5 +1,5 @@
 import { api } from "@/shared/lib/axios";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
 interface IParams {
     page?: string,
@@ -13,7 +13,7 @@ interface IParams {
 }
 
 export const usePartner = () => {
-  const queryClient = useQueryClient();
+  // const queryClient = useQueryClient();
   const key = "partner";
 
   const getPartners = (params:IParams) =>

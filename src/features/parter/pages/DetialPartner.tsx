@@ -7,6 +7,7 @@ import { MdEdit } from "react-icons/md"
 import { FaPhoneAlt, FaMapMarkerAlt, FaUserPlus, FaClock, FaBalanceScale } from 'react-icons/fa';
 import { format } from 'date-fns';
 import PartnerPopup from '../components/partner-popup/PartnerPopup';
+import { Spin } from 'antd';
 
 
 const DetialPartner = () => {
@@ -34,7 +35,7 @@ const DetialPartner = () => {
 
   return (
     <Box>
-      {isPending && <p>Yuklanmoqda...</p>}
+      {isPending && <p className='w-full h-full flex justify-center items-center'><Spin />;</p>}
       {error && <p style={{ color: 'red' }}>Xatolik yuz berdi</p>}
 
       {data ? (

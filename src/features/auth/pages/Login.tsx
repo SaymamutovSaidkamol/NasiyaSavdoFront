@@ -13,7 +13,7 @@ type FieldType = {
 const Login: React.FC = () => {
   const dispatch = useDispatch()
   const {login} = useAuth()
-  const {isPending, isError} = login
+  const {isPending, error, isError} = login
   // console.log(error?.response?.data?.message);
   
 

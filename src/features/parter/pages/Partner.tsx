@@ -1,30 +1,27 @@
 import Box from "@/shared/ui/Box";
 import Title from "@/shared/ui/Title";
-import React, { useState } from "react";
+import React from "react";
 import { usePartner } from "../service/usePartner";
-import TableView from "../components/table-view/TableView";
 import Options from "../components/options/Options";
-import Paganation from "../components/paganation/Paganation";
+import PartnerWrapper from "../components/partner-wrapper/PartnerWrapper";
+import { useParamsHook } from "@/shared/hooks/useParamsHook";
+import { Badge } from "antd";
 
 const Partner = ({ role }: { role: string }) => {
   const { getPartners } = usePartner();
-
-  const [page, setPage] = useState(1);
-  const [limit] = useState(10);
-
-  const { data, isPending } = getPartners({ role, page, limit });
-
+  const {getParam} = useParamsHook()
+  const page = getParam("page") || "1"
+  const { data, isPending } = getPartners({ role, page, sortOrder:"desc"});
 
   return (
     <Box>
-      <Title className={"mb-4"}>
-        {role === "customer" ? "Mijozlar" : "Sotuvchilar"} ro'yhati
-      </Title>
+      <Badge count={data?.total} style={{ backgroundColor: '#000' }}>
+        <Title className={"mb-4"}>
+          {role === "customer" ? "Mijozlar" : "Sotuvchilar"} ro'yhati
+        </Title>
+      </Badge>
       <Options />
-      <TableView data={data?.data} loading={isPending} />
-      <Paganation page={page}
-        setPage={setPage}
-        total={data?.total || 0} />
+      <PartnerWrapper data={data} loading={isPending}/>
     </Box>
   );
 };

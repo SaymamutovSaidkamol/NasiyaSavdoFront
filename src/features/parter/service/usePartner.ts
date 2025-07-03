@@ -1,26 +1,33 @@
 import { api } from "@/shared/lib/axios";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 interface IParams {
-  page?: number;
-  limit?: number;
-  search?: string;
-  role: string;
-  isActive?: string;
-  sortBy?: string;
-  sortOrder?: string;
-  debtOnly?: string;
+    page?: string,
+    limit?: string,
+    search?: string,
+    role: string,
+    isActive?: string,
+    sortBy?: string,
+    sortOrder?: "asc" | "desc",
+    debtOnly?: string
 }
 
 export const usePartner = () => {
-  // const queryClient = useQueryClient();
+  const queryClient = useQueryClient();
   const key = "partner";
 
-  const getPartners = (params: IParams) =>
+  const getPartners = (params:IParams) =>
     useQuery({
       queryKey: [key, params],
-      queryFn: () => api.get("partners", { params }).then((res) => res.data),
+      queryFn: () => api.get("partners", {params}).then((res) => res.data),
     });
+  
+  const createPartner = useMutation({
+    mutationFn: (body:any)=> api.post("partners", body).then(res => res.data),
+    onSuccess:()=>{
+      queryClient.invalidateQueries({queryKey: [key]})
+    }
+  })
 
-  return { getPartners };
+  return { getPartners, createPartner };
 };

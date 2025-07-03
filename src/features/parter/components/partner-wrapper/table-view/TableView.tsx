@@ -1,9 +1,12 @@
-import { Button, Table } from "antd";
-import { MoreOutlined } from "@ant-design/icons";
+import { Button, Table, type MenuProps } from "antd";
 import React, { type FC } from "react";
 import "./style.css";
 import { Link } from "react-router-dom";
 import { useParamsHook } from "@/shared/hooks/useParamsHook";
+import TelPopup from "@/shared/components/tel-popup/TelPopup";
+import PaymentPopup from "../../../../payment/components/payment-popup/PaymentPopup";
+import useGetRole from "@/shared/hooks/useGetRole";
+import Options from "@/shared/ui/Options";
 // import { Link } from "react-router-dom";
 
 interface Props {
@@ -13,7 +16,20 @@ interface Props {
 
 const TableView: FC<Props> = ({ data, loading }) => {
   const { getParam } = useParamsHook();
+  const role = useGetRole();
   const page = getParam("page") || "1";
+
+  const items: MenuProps["items"] = [
+    {
+      label: <span>Pin</span>,
+      key: "0",
+    },
+    {
+      label: <span>Arxivlash</span>,
+      key: "1",
+    },
+  ];
+
   const columns = [
     {
       title: "№",
@@ -28,7 +44,7 @@ const TableView: FC<Props> = ({ data, loading }) => {
       dataIndex: "fullname",
       key: "fullname",
       render: (text: any, item: any) => {
-        return <Link to={`/partner/${item.id}`}>{text}</Link>;
+        return <Link to={`/${role}/${item.id}`}>{text}</Link>;
       },
     },
     {
@@ -41,7 +57,7 @@ const TableView: FC<Props> = ({ data, loading }) => {
       dataIndex: "phone",
       key: "adress",
       render: (text: any) => {
-        return text[0];
+        return <TelPopup phoneNumber={text[0]} />;
       },
     },
     {
@@ -49,25 +65,34 @@ const TableView: FC<Props> = ({ data, loading }) => {
       dataIndex: "balance",
       key: "balance",
       render: (number: number) => {
-        return <b style={{color: number < 0 ? "crimson" : number > 0 ? "green" : "grey"}}>{number.fprice()}</b>;
+        return (
+          <b
+            style={{
+              color: number < 0 ? "crimson" : number > 0 ? "green" : "grey",
+            }}
+          >
+            {number.fprice()}
+          </b>
+        );
       },
     },
     {
       title: "Option",
       dataIndex: "option",
       key: "option",
-      render: () => {
+      render: (_text: any, item: any) => {
         return (
           <div className="flex gap-2 justify-end">
-            <Button>To'lov</Button>
-            <Button>
-              <MoreOutlined />
-            </Button>
+            <PaymentPopup role={role} id={item.id}>
+              <Button>To'lov</Button>
+            </PaymentPopup>
+            <Options items={items} />
           </div>
         );
       },
     },
   ];
+
   return (
     <div className="w-full overflow-x-auto">
       <Table

@@ -2,7 +2,7 @@ import Box from "@/shared/ui/Box";
 import Title from "@/shared/ui/Title";
 import React from "react";
 import { usePartner } from "../service/usePartner";
-import Options from "../components/options/Options";
+import Navigation from "../components/navigation/Navigation";
 import PartnerWrapper from "../components/partner-wrapper/PartnerWrapper";
 import { useParamsHook } from "@/shared/hooks/useParamsHook";
 import { Badge } from "antd";
@@ -11,7 +11,7 @@ const Partner = ({ role }: { role: string }) => {
   const { getPartners } = usePartner();
   const {getParam} = useParamsHook()
   const page = getParam("page") || "1"
-  const { data, isPending } = getPartners({ role, page, sortOrder:"desc"});
+  const { data, isFetching } = getPartners({ role, page, sortOrder:"desc"});
 
   return (
     <Box>
@@ -20,8 +20,8 @@ const Partner = ({ role }: { role: string }) => {
           {role === "customer" ? "Mijozlar" : "Sotuvchilar"} ro'yhati
         </Title>
       </Badge>
-      <Options />
-      <PartnerWrapper data={data} loading={isPending}/>
+      <Navigation />
+      <PartnerWrapper data={data} loading={isFetching} />
     </Box>
   );
 };

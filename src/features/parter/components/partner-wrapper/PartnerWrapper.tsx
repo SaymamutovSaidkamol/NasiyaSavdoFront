@@ -1,7 +1,7 @@
 import { useMediaQuery } from "@/shared/hooks/useMediaQuery";
 import React, { type FC } from "react";
-import CardView from "../card-view/CardView";
-import TableView from "../table-view/TableView";
+import CardView from "./card-view/CardView";
+import TableView from "./table-view/TableView";
 import { Pagination } from "antd";
 import { useParamsHook } from "@/shared/hooks/useParamsHook";
 

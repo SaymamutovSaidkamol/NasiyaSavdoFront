@@ -3,7 +3,7 @@ import { Button } from "antd";
 import React, { useCallback, useState } from "react";
 import PartnerPopup from "../partner-popup/PartnerPopup";
 
-const Options = () => {
+const Navigation = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const showModal = useCallback(() => {
@@ -38,4 +38,4 @@ const Options = () => {
   );
 };
 
-export default React.memo(Options);
+export default React.memo(Navigation);

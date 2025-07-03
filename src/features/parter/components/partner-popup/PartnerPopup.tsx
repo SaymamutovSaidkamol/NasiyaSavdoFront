@@ -1,15 +1,14 @@
 import React from "react";
 import { Button, Input, Modal, Form } from "antd";
-import { useLocation } from "react-router-dom";
-import { Role } from "@/shared/const";
 import { PatternFormat } from "react-number-format";
 import { usePartner } from "../../service/usePartner";
+import useGetRole from "@/shared/hooks/useGetRole";
 
 type FieldType = {
   fullname?: string;
   address?: string;
-  phone?: string;
-  phone2?: string;
+  phone_primary?: string;
+  phone_secondary?: string;
   role?: string;
 };
 
@@ -24,38 +23,30 @@ const PartnerPopup: React.FC<Props> = ({
   isModalOpen,
   previousData,
 }) => {
-  const { pathname } = useLocation();
-  const currentPathname = pathname.split("/")[1];
-  const {createPartner} = usePartner()
-  const {isPending} = createPartner
-  
+  const role = useGetRole()
+  const { createPartner } = usePartner();
+  const { isPending } = createPartner;
+
   const handleSubmit = (values: FieldType) => {
-    console.log(values);
-    values.role = currentPathname === Role.seller ? Role.seller : Role.customer;
-    const phone2 = values.phone2?.replace(/\s/gi, "")
+    values.role = role;
+    const phone_secondary = values.phone_secondary?.replace(/\s/gi, "");
 
     const newPartner = {
       fullname: values.fullname,
       role: values.role,
       adress: values.address, // ADRESS | ADDRESS
-      phone: [
-        values.phone?.replace(/\s/gi, ""),
-        
-      ],
+      phone: [values.phone_primary?.replace(/\s/gi, "")],
     };
-    if(phone2){
-        newPartner.phone.push(phone2)
+    if (phone_secondary) {
+      newPartner.phone.push(phone_secondary);
     }
-    createPartner.mutate(newPartner, {
-        onSuccess:()=>{
-            handleCancel()
-        }
-    })
+    console.log(newPartner);
+    
   };
   return (
     <>
       <Modal
-        title={previousData ? "Update" : "Create"}
+        title={ `${role === "seller" ? "Sotuvchi " : "Mijoz "}` + `${previousData ? "tahrirlash" : "qo'shish"}` }
         closable={{ "aria-label": "Custom Close Button" }}
         open={isModalOpen}
         onCancel={handleCancel}
@@ -69,7 +60,7 @@ const PartnerPopup: React.FC<Props> = ({
           layout="vertical"
         >
           <Form.Item<FieldType>
-            label="fullname"
+            label="Ism"
             name="fullname"
             rules={[{ required: true, message: "Please input your username!" }]}
           >
@@ -77,7 +68,7 @@ const PartnerPopup: React.FC<Props> = ({
           </Form.Item>
 
           <Form.Item<FieldType>
-            label="address"
+            label="Manzil"
             name="address"
             rules={[{ required: true, message: "Please input your password!" }]}
           >
@@ -85,12 +76,11 @@ const PartnerPopup: React.FC<Props> = ({
           </Form.Item>
 
           <Form.Item<FieldType>
-            label="phone"
-            name="phone"
+            label="Asosiy telefon raqam"
+            name="phone_primary"
             rules={[{ required: true, message: "Please input your password!" }]}
           >
             <PatternFormat
-              //   className="w-full px-2 border border-gray-300 rounded-md"
               format="+998 ## ### ## ##"
               mask={"_"}
               allowEmptyFormatting
@@ -99,12 +89,13 @@ const PartnerPopup: React.FC<Props> = ({
           </Form.Item>
 
           <Form.Item<FieldType>
-            label="phone2"
-            name="phone2"
-            rules={[{ required: false, message: "Please input your password!" }]}
+            label="Telefon raqam"
+            name="phone_secondary"
+            rules={[
+              { required: false, message: "Please input your password!" },
+            ]}
           >
             <PatternFormat
-              //   className="w-full px-2 border border-gray-300 rounded-md"
               format="+998 ## ### ## ##"
               mask={"_"}
               allowEmptyFormatting
@@ -112,7 +103,12 @@ const PartnerPopup: React.FC<Props> = ({
             />
           </Form.Item>
           <Form.Item label={null}>
-            <Button loading={isPending} className="w-full" type="primary" htmlType="submit">
+            <Button
+              loading={isPending}
+              className="w-full"
+              type="primary"
+              htmlType="submit"
+            >
               Submit
             </Button>
           </Form.Item>

@@ -13,7 +13,7 @@ const Sidebar = ({ show }: { show: boolean }) => {
         <p className="text-2xl bg-black text-white size-8 min-w-8 flex justify-center items-center rounded-xl">
           B
         </p>
-        <p className="text-3xl sidebar-logo">Logoo</p>
+        <p className="text-3xl sidebar-logo">LOGOO</p>
       </div>
       <ul className="my-10">
         {SIDEBAR_DATA?.map((item: any) => (

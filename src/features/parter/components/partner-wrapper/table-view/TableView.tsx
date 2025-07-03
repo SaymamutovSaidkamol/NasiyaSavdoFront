@@ -8,6 +8,9 @@ import PaymentPopup from "../../../../payment/components/payment-popup/PaymentPo
 import useGetRole from "@/shared/hooks/useGetRole";
 import Options from "@/shared/ui/Options";
 // import { Link } from "react-router-dom";
+import { TiPin } from "react-icons/ti";
+import { BiSolidArchiveIn } from "react-icons/bi";
+
 
 interface Props {
   data: undefined | any;
@@ -21,11 +24,21 @@ const TableView: FC<Props> = ({ data, loading }) => {
 
   const items: MenuProps["items"] = [
     {
-      label: <span>Pin</span>,
+      label: (
+        <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <TiPin style={{ fontSize: 16 }} />
+          Pin
+        </span>
+      ),
       key: "0",
     },
     {
-      label: <span>Arxivlash</span>,
+      label: (
+        <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <BiSolidArchiveIn  style={{ fontSize: 16 }} />
+          Arxiw
+        </span>
+      ),
       key: "1",
     },
   ];

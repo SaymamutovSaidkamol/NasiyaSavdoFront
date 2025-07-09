@@ -1,4 +1,3 @@
-import Title from '@/shared/ui/Title'
 import { Button, Input } from 'antd'
 import React, { useState } from 'react'
 import BuyCreate from '../../components/create/BuyCreate'

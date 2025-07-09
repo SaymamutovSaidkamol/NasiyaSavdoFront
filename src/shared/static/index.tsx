@@ -1,4 +1,4 @@
-import { UserOutlined } from "@ant-design/icons";
+import { AppstoreAddOutlined, UsergroupAddOutlined, UserOutlined } from "@ant-design/icons";
 
 export const SIDEBAR_DATA = [
     {
@@ -11,10 +11,16 @@ export const SIDEBAR_DATA = [
         id: 2,
         name: "Sotuvchilar",
         path: "/seller",
-        icon: <UserOutlined className="text-xl" />
+        icon: <UsergroupAddOutlined className="text-xl" />
     },
     {
         id: 3,
+        name: "Mahsulotlar",
+        path: "/product",
+        icon: <AppstoreAddOutlined className="text-xl"/> 
+    },
+    {
+        id: 4,
         name: "Profile",
         path: "/profile",
         icon: <UserOutlined className="text-xl" />

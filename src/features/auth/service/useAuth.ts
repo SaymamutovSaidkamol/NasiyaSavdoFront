@@ -8,6 +8,7 @@ export const useAuth = () => {
   const getMe = () => useQuery({
     queryKey: [key],
     queryFn: () => api.get("auth/me").then((res) => res.data),
+    retry: false
   });
 
   const login = useMutation({
@@ -15,6 +16,7 @@ export const useAuth = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [key] });
     },
+    retry: 1
   });
 
   return { login, getMe };

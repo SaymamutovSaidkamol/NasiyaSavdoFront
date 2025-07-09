@@ -23,7 +23,7 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
-        retry: false,
+        // retry: false,
         // staleTime: 1000 * 60 * 5, // re-fetch vaqti
         // gcTime: 1000 * 60 * 10, // cache vaqti
       },

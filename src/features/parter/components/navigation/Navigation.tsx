@@ -1,39 +1,52 @@
 import { PlusOutlined } from "@ant-design/icons";
 import { Button } from "antd";
-import React, { useCallback, useState } from "react";
+import React from "react";
 import PartnerPopup from "../partner-popup/PartnerPopup";
+import useGetRole from "@/shared/hooks/useGetRole";
+import { Role } from "@/shared/const";
+import { useShow } from "@/shared/hooks/useShow";
+import Tabs from "@/shared/ui/Tabs";
 
 const Navigation = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { handleCancel, handleShow, isModalOpen } = useShow();
+  const role = useGetRole();
 
-  const showModal = useCallback(() => {
-    setIsModalOpen(true);
-  }, []);
+  const links = [
+    {
+      id: 1,
+      title: "Active",
+      path: role === Role.customer ? "/" : "",
+    },
+    {
+      id: 2,
+      title: "Arxiv",
+      path: role === Role.customer ? "customer/archive" : "archive",
+    },
+    {
+      id: 3,
+      title: "O'chirilganlar",
+      path: role === Role.customer ? "customer/disabled" : "disabled",
+    },
+  ];
 
-  const handleCancel = useCallback(() => {
-    setIsModalOpen(false);
-  }, []);
   return (
     <>
-      <div className="mb-4 flex justify-between">
-        <div className="flex gap-3">
-          <span className="underline">Aktiv</span>
-          <span>Arxiv</span>
-        </div>
+      <div className="mb-4 flex justify-between items-center">
+        <Tabs links={links} />
+
         <div>
-          <Button onClick={showModal} type="primary">
+          <Button onClick={handleShow} type="primary">
             <PlusOutlined />
           </Button>
         </div>
       </div>
-      {
-        isModalOpen &&
+      {isModalOpen && (
         <PartnerPopup
           isModalOpen={isModalOpen}
           handleCancel={handleCancel}
           // previousData={{fullname:"john", address: "Namangan", phone:"99812345678"}}
         />
-      }
+      )}
     </>
   );
 };

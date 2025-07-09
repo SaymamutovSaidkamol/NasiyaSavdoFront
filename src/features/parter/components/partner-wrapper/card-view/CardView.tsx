@@ -1,11 +1,11 @@
 import TelPopup from "@/shared/components/tel-popup/TelPopup";
 import { LoadingOutlined } from "@ant-design/icons";
-import { Button, type MenuProps } from "antd";
+import { Button } from "antd";
 import React, { type FC } from "react";
 import { Link } from "react-router-dom";
 import PaymentPopup from "../../../../payment/components/payment-popup/PaymentPopup";
 import useGetRole from "@/shared/hooks/useGetRole";
-import Options from "@/shared/ui/Options";
+import PartnerOptions from "../partner-options/PartnerOptions";
 
 interface Props {
   data: undefined | any;
@@ -14,16 +14,7 @@ interface Props {
 
 const CardView: FC<Props> = ({ data, loading }) => {
   const role = useGetRole();
-  const items: MenuProps["items"] = [
-    {
-      label: <span>Pin</span>,
-      key: "0",
-    },
-    {
-      label: <span>Arxivlash</span>,
-      key: "1",
-    },
-  ];
+
   return (
     <div className="relative min-h-36">
       {data?.map((item: any, index: number) => (
@@ -36,7 +27,7 @@ const CardView: FC<Props> = ({ data, loading }) => {
               </Link>
             </div>
             <div>
-              <Options items={items} />
+               <PartnerOptions item={item} />
             </div>
           </div>
           <div className="flex justify-between my-3">

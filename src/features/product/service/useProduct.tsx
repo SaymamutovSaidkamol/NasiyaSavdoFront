@@ -2,12 +2,11 @@ import { product } from "@/shared/keys";
 import { api } from "@/shared/lib/axios";
 import {
   useQuery,
-  useMutation,
-  useQueryClient
+  // useQueryClient
 } from "@tanstack/react-query";
 
 export const useProduct = () => {
-  const queryClient = useQueryClient();
+  // const queryClient = useQueryClient();
 
   const getProducts = (params: any) =>
     useQuery({

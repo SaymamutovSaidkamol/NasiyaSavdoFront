@@ -38,8 +38,6 @@ const PaymentPopup: FC<Props> = ({ children, id, previousData, role }) => {
       partnerId: id,
       paymentType: role === Role.customer ? PaymentType.in : PaymentType.out,
     };
-    console.log(payment);
-    
     createPayment.mutate(payment, {
       onSuccess:()=>{
         handleCancel()

@@ -1,17 +1,34 @@
 import Box from "@/shared/ui/Box";
 import Title from "@/shared/ui/Title";
 import React from "react";
-import { usePartner } from "../service/usePartner";
+import { usePartner, type IParams } from "../service/usePartner";
 import Navigation from "../components/navigation/Navigation";
-import PartnerWrapper from "../components/partner-wrapper/PartnerWrapper";
 import { useParamsHook } from "@/shared/hooks/useParamsHook";
 import { Badge } from "antd";
+import { Outlet, useLocation } from "react-router-dom";
 
 const Partner = ({ role }: { role: string }) => {
   const { getPartners } = usePartner();
   const {getParam} = useParamsHook()
   const page = getParam("page") || "1"
-  const { data, isFetching } = getPartners({ role, page, sortOrder:"desc"});
+  const search = getParam("search") || ""
+  const {pathname} = useLocation()
+  const typeName = pathname.split("/")[2] || "active"
+  
+
+  const query:IParams = { role, page, sortOrder:"desc", isArchive: false, isActive: "true"}
+
+  if(typeName === "archive"){
+    query.isArchive = true
+  }
+  if(typeName === "disabled"){
+    query.isActive = "false"
+  }
+  if(search){
+    query.search = search
+  }
+  
+  const { data, isFetching } = getPartners(query);
 
   return (
     <Box>
@@ -21,7 +38,7 @@ const Partner = ({ role }: { role: string }) => {
         </Title>
       </Badge>
       <Navigation />
-      <PartnerWrapper data={data} loading={isFetching} />
+      <Outlet context={{data, isFetching}}/>
     </Box>
   );
 };

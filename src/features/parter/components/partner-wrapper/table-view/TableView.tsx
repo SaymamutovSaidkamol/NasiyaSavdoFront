@@ -1,4 +1,4 @@
-import { Button, Table, type MenuProps } from "antd";
+import { Button, Table } from "antd";
 import React, { type FC } from "react";
 import "./style.css";
 import { Link } from "react-router-dom";
@@ -6,11 +6,9 @@ import { useParamsHook } from "@/shared/hooks/useParamsHook";
 import TelPopup from "@/shared/components/tel-popup/TelPopup";
 import PaymentPopup from "../../../../payment/components/payment-popup/PaymentPopup";
 import useGetRole from "@/shared/hooks/useGetRole";
-import Options from "@/shared/ui/Options";
+import PartnerOptions from "../partner-options/PartnerOptions";
+import { PushpinOutlined } from "@ant-design/icons";
 // import { Link } from "react-router-dom";
-import { TiPin } from "react-icons/ti";
-import { BiSolidArchiveIn } from "react-icons/bi";
-
 
 interface Props {
   data: undefined | any;
@@ -22,34 +20,18 @@ const TableView: FC<Props> = ({ data, loading }) => {
   const role = useGetRole();
   const page = getParam("page") || "1";
 
-  const items: MenuProps["items"] = [
-    {
-      label: (
-        <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <TiPin style={{ fontSize: 16 }} />
-          Pin
-        </span>
-      ),
-      key: "0",
-    },
-    {
-      label: (
-        <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <BiSolidArchiveIn  style={{ fontSize: 16 }} />
-          Arxiw
-        </span>
-      ),
-      key: "1",
-    },
-  ];
-
   const columns = [
     {
       title: "№",
       dataIndex: "index",
       key: "index",
-      render: (_value: any, _item: any, index: number) => {
-        return <span>{index + 1 + (Number(page) - 1) * 10}</span>;
+      render: (_value: any, item: any, index: number) => {
+        return <span>
+          <span>{index + 1 + (Number(page) - 1) * 10}</span>
+          {
+            item.pin &&<PushpinOutlined />
+          }
+        </span>;
       },
     },
     {
@@ -64,6 +46,9 @@ const TableView: FC<Props> = ({ data, loading }) => {
       title: "Manzil",
       dataIndex: "adress",
       key: "adress",
+      render: (text: any) => {
+        return <span title={text} className="w-[200px] line-clamp-1 ">{text}</span>;
+      },
     },
     {
       title: "Telefon",
@@ -99,7 +84,7 @@ const TableView: FC<Props> = ({ data, loading }) => {
             <PaymentPopup role={role} id={item.id}>
               <Button>To'lov</Button>
             </PaymentPopup>
-            <Options items={items} />
+            <PartnerOptions item={item} />
           </div>
         );
       },

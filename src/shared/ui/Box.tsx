@@ -1,8 +1,8 @@
 import React, { type ReactNode } from 'react'
 
-const Box = ({children}:{children:ReactNode}) => {
+const Box = ({children, className}:{children:ReactNode,className?:undefined | string}) => {
   return (
-    <div className='bg-white p-6 rounded shadow'>{children}</div>
+    <div className={`bg-white md:p-6 p-3 rounded shadow ${className}`}>{children}</div>
   )
 }
 

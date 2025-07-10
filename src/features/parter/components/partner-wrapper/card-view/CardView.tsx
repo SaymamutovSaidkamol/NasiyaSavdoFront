@@ -22,7 +22,7 @@ const CardView: FC<Props> = ({ data, loading }) => {
           <div className="flex justify-between">
             <div className="flex items-center gap-2">
               <span>{index + 1}</span>
-              <Link className="font-semibold" to={`/partner/${item.id}`}>
+              <Link className="font-semibold" to={`/${role}/${item.id}`}>
                 {item.fullname}
               </Link>
             </div>

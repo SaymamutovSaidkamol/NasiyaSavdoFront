@@ -1,26 +1,42 @@
 import { Button, Form, Input, Select, type FormProps } from "antd";
-import React from "react";
+import React, { type FC } from "react";
+import { useBuy } from "@/features/buy";
+import { useParams } from "react-router-dom";
 
 type FieldType = {
   title: string;
   code?: string;
-  price: number;
+  buyPrice: number;
   quantity: number;
   categoryId: string;
   units: string;
   comment?: string;
+  partnerId?: string;
 };
 
 const { TextArea } = Input;
 
-const ProductCreate = () => {
+interface Props {
+  handleCancel: () => void;
+}
+
+export const ProductCreate: FC<Props> = React.memo(({ handleCancel }) => {
+  const {id} = useParams()
+  
+  const {createBuy} = useBuy()
   const onFinish: FormProps<FieldType>["onFinish"] = (values) => {
-    console.log(values);
+    values.partnerId = id
+    const product = {
+      ...values,
+      quantity: Number(values.quantity),
+      buyPrice: Number(values.buyPrice),
+    }
+    createBuy.mutate(product)
+    
   };
 
   return (
     <div>
-      <h2 className="my-4 text-xl font-semibold">Yangi mahsulot qo'shish</h2>
       <Form
         name="basic"
         onFinish={onFinish}
@@ -49,7 +65,7 @@ const ProductCreate = () => {
               options={[
                 {
                   label: "Telefon",
-                  value: "id",
+                  value: "ccfac508-0b24-4c25-845d-ddf1b6280d86",
                 },
               ]}
             ></Select>
@@ -65,7 +81,7 @@ const ProductCreate = () => {
               options={[
                 {
                   label: "Telefon",
-                  value: "id",
+                  value: "dona",
                 },
               ]}
             ></Select>
@@ -80,32 +96,32 @@ const ProductCreate = () => {
 
           <Form.Item<FieldType>
             label="Narxi"
-            name="price"
+            name="buyPrice"
             rules={[{ required: true, message: "Please input your password!" }]}
           >
             <Input />
           </Form.Item>
         </div>
-        <Form.Item<FieldType>
-          label="Izoh"
-          name="comment"
-        >
+        <Form.Item<FieldType> label="Izoh" name="comment">
           <TextArea />
         </Form.Item>
 
-        <Form.Item style={{ margin: 0 }} label={null}>
-          <Button
-            // loading={isPending}
-            type="primary"
-            className="w-full"
-            htmlType="submit"
-          >
-            Submit
+        <div className="grid md:grid-cols-2 gap-x-4">
+          <Button htmlType="button" onClick={handleCancel}>
+            Ortga qaytish
           </Button>
-        </Form.Item>
+          <Form.Item style={{ margin: 0 }} label={null}>
+            <Button
+              loading={createBuy.isPending}
+              type="primary"
+              className="w-full"
+              htmlType="submit"
+            >
+              Submit
+            </Button>
+          </Form.Item>
+        </div>
       </Form>
     </div>
   );
-};
-
-export default React.memo(ProductCreate);
+});

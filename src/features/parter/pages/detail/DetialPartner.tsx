@@ -19,9 +19,9 @@ const DetialPartner = () => {
   const { data, isPending } = getPartner(id || "");
   const role = useGetRole();
   const { handleCancel, handleShow, isModalOpen } = useShow();
-  const navigate = useNavigate()
-  
-  const isCustomer = role === Role.customer
+  const navigate = useNavigate();
+
+  const isCustomer = role === Role.customer;
   const isActive = data?.isActive && !data?.isArchive;
 
   const previousData = {
@@ -62,70 +62,78 @@ const DetialPartner = () => {
     },
   ];
 
-  return isPending ? (
-    <Box>
-      <Skeleton active />
-    </Box>
-  ) : (
+  return (
     <div className="flex gap-4 flex-col">
-      <Box>
-        <div className="flex justify-between max-[550px]:flex-col relative">
-          <div className=" flex flex-col items-start gap-2">
-            <Badge
-              count={data?.role === Role.customer ? "Mijoz" : "Sotuvchi"}
-              style={{ backgroundColor: "#000" }}
-            >
-              <Title>{data?.fullname}</Title>
-            </Badge>
-            <p className=" text-gray-500">{data?.adress}</p>
-            <Tag color={isActive ? "green" : data?.isArchive ? "gold" : "red"}>
-              {isActive ? "Active" : data?.isArchive ? "Arxiv" : "O'chirilgan"}{" "}
-            </Tag>
-            <div className="text-sm text-gray-500">
-              <p>Ro'yxatga olgan shaxs:</p>
-              <Link to={"/"} className="font-bold">
-                {data?.createdBy?.fname} {data?.createdBy?.lname}
-              </Link>
-            </div>
-          </div>
-          <div className=" flex items-end flex-col gap-2">
-            <div className="max-[550px]:absolute top-0 right-0">
-              <Options items={items} />
-            </div>
-            <h2
-              style={{
-                color:
-                  data?.balance < 0
-                    ? "crimson"
-                    : data?.balance > 0
-                    ? "green"
-                    : "grey",
-              }}
-              className="text-2xl font-bold"
-            >
-              {data?.balance?.fprice()}
-            </h2>
-            <div>
-              <p className="text-xs text-gray-500">Asosiy raqam</p>
-              <TelPopup phoneNumber={data?.phone[0]} />
-            </div>
-            {data?.phone[1] && (
-              <div>
-                <p className="text-xs text-gray-500">Ikkinchi raqam</p>
-                <TelPopup phoneNumber={data?.phone[1]} />
+      {isPending ? (
+        <Box>
+          <Skeleton active />
+        </Box>
+      ) : (
+        <Box>
+          <div className="flex justify-between max-[550px]:flex-col relative">
+            <div className=" flex flex-col items-start gap-2">
+              <Badge
+                count={data?.role === Role.customer ? "Mijoz" : "Sotuvchi"}
+                style={{ backgroundColor: "#000" }}
+              >
+                <Title>{data?.fullname}</Title>
+              </Badge>
+              <p className=" text-gray-500">{data?.adress}</p>
+              <Tag
+                color={isActive ? "green" : data?.isArchive ? "gold" : "red"}
+              >
+                {isActive
+                  ? "Active"
+                  : data?.isArchive
+                  ? "Arxiv"
+                  : "O'chirilgan"}{" "}
+              </Tag>
+              <div className="text-sm text-gray-500">
+                <p>Ro'yxatga olgan shaxs:</p>
+                <Link to={"/"} className="font-bold">
+                  {data?.createdBy?.fname} {data?.createdBy?.lname}
+                </Link>
               </div>
-            )}
-            <div className="flex gap-3">
-              <Button onClick={()=> navigate(isCustomer ? "sell" : "buy")}>
-                {role === Role.customer ? "Sotish" : "Xarid qilish"}
-              </Button>
-              <PaymentPopup role={role} id={data?.id}>
-                <Button>To'lov</Button>
-              </PaymentPopup>
+            </div>
+            <div className=" flex items-end flex-col gap-2">
+              <div className="max-[550px]:absolute top-0 right-0">
+                <Options items={items} />
+              </div>
+              <h2
+                style={{
+                  color:
+                    data?.balance < 0
+                      ? "crimson"
+                      : data?.balance > 0
+                      ? "green"
+                      : "grey",
+                }}
+                className="text-2xl font-bold"
+              >
+                {data?.balance?.fprice()}
+              </h2>
+              <div>
+                <p className="text-xs text-gray-500">Asosiy raqam</p>
+                <TelPopup phoneNumber={data?.phone[0]} />
+              </div>
+              {data?.phone[1] && (
+                <div>
+                  <p className="text-xs text-gray-500">Ikkinchi raqam</p>
+                  <TelPopup phoneNumber={data?.phone[1]} />
+                </div>
+              )}
+              <div className="flex gap-3">
+                <Button onClick={() => navigate(isCustomer ? "sell" : "buy")}>
+                  {role === Role.customer ? "Sotish" : "Xarid qilish"}
+                </Button>
+                <PaymentPopup role={role} id={data?.id}>
+                  <Button>To'lov</Button>
+                </PaymentPopup>
+              </div>
             </div>
           </div>
-        </div>
-      </Box>
+        </Box>
+      )}
       <Box>
         <Tabs
           links={[

@@ -1,103 +1,173 @@
-import PartnerSell from "@/features/parter/pages/detail/PartnerSell";
-import { Button, Form, Input, type FormProps } from "antd";
-import React, { useState, type FC } from "react";
+import { useProduct } from "@/features/product";
+import { useDebounce } from "@/shared/hooks/useDebounce";
+import Title from "@/shared/ui/Title";
+import { Button, Form, Input } from "antd";
+import React, { useState } from "react";
+import { NumericFormat } from "react-number-format";
 import { useParams } from "react-router-dom";
+import { useSell } from "../../service/useSell";
 
 type FieldType = {
-  title: string;
-  sellPrice: number;
-  quantity: number;
-  partnerId?: string;
+  quantity?: string;
+  sellPrice?: string;
 };
 
-interface Props {
-  handleCancel: () => void;
-  product: any;
-}
+export const SellCreate = React.memo(() => {
+  // 3 start
+  const [cart, setCart] = useState<any>([]);
+  // 3 end
 
-export const SellCreate: FC<Props> = React.memo((product) => {
-  const { id } = useParams()
-  const [active, setActive] = useState(false)
-  const [products, setProducts] = useState<FieldType[]>([])
+  // 1 start
+  const { getSearchProducts } = useProduct();
+  const [value, setValue] = useState("");
+  const debounceValue = useDebounce(value);
+  const { data } = getSearchProducts({ name: debounceValue });
+  // 1 end
 
-  const onFinish: FormProps<FieldType>["onFinish"] = (values) => {
-    const newProduct = {
-      ...values,
-      partnerId: id,
-      quantity: Number(values.quantity),
-      sellPrice: Number(values.sellPrice),
+  // 2 start
+  const [selectedProduct, setSelectedProduct] = useState<any>(null);
+  const handleAddProduct = (values: FieldType) => {
+    let product = {
+      quantity: Number(values.quantity?.replace(/\s/gi, "")),
+      sellPrice: Number(values.sellPrice?.replace(/\s/gi, "")),
+      title: selectedProduct?.title,
+      productId: selectedProduct?.id,
     };
+    setCart((prev: any) => [...prev, product]);
+    setSelectedProduct(null);
+  };
+  // 2 end
 
-    setProducts((prev) => {
-      const updated = [...prev, newProduct];
-      console.log("Yangi product qo‘shildi:", newProduct);
-      console.log("Hozirgi barcha productlar:", updated);
-      return updated;
+  const { id } = useParams();
+  const { createSell } = useSell();
+
+  const handleSell = () => {
+    cart.forEach((item: any) => {
+      delete item.title;
     });
 
-    console.log(products);
-    console.log(product.product);
-
-
-    setActive(true)
+    const contract = {
+      partnerId: id,
+      time: 7,
+      products: cart,
+    };
+    createSell.mutate(contract, {
+      onSuccess: () => {
+        setCart([]);
+      },
+    });
   };
 
   return (
-    <>
-
-      {products.map((item: any) => (
-        <div className="border border-[#c7c2c2] bg-[#eee] rounded-2xl px-3 py-5 flex items-center justify-around mb-5" key={item.sellPrice}>
+    <div>
+      {/* 3 */}
+      {!!cart.length && (
+        <>
           <div>
-            <h3><strong>Product: </strong>{product.product.title}</h3>
-            <h3><strong>Quantity: </strong>{item.quantity}</h3>
-            <h3><strong>SellPrice: </strong>{item.sellPrice}</h3>
+            {cart?.map((item: any) => (
+              <div key={item.productId} className="border">
+                <h3>{item.title}</h3>
+                <p>{item.quantity}</p>
+                <p>{item.sellPrice.fprice("dona")}</p>
+              </div>
+            ))}
           </div>
+          <br />
+        </>
+      )}
+
+      {/* 2 */}
+      {selectedProduct && (
+        <>
           <div>
-            <Button>x</Button>
+            <Title>{selectedProduct?.title}</Title>
+            <Form
+              name="basic"
+              // initialValues={previousData}
+              onFinish={handleAddProduct}
+              autoComplete="off"
+              layout="vertical"
+            >
+              <Form.Item<FieldType>
+                label="Summa"
+                name="quantity"
+                rules={[
+                  { required: true, message: "Please input your password!" },
+                ]}
+              >
+                <NumericFormat
+                  allowLeadingZeros
+                  thousandSeparator={" "}
+                  customInput={Input}
+                />
+              </Form.Item>
+
+              <Form.Item<FieldType>
+                label="Summa"
+                name="sellPrice"
+                rules={[
+                  { required: true, message: "Please input your password!" },
+                ]}
+              >
+                <NumericFormat
+                  allowLeadingZeros
+                  thousandSeparator={" "}
+                  customInput={Input}
+                />
+              </Form.Item>
+
+              <Form.Item label={null}>
+                <Button
+                  // loading={isPending}
+                  type="primary"
+                  onClick={() => setSelectedProduct(null)}
+                  htmlType="button"
+                >
+                  cancel
+                </Button>
+              </Form.Item>
+              <Form.Item label={null}>
+                <Button
+                  // loading={isPending}
+                  type="primary"
+                  htmlType="submit"
+                >
+                  +
+                </Button>
+              </Form.Item>
+            </Form>
+          </div>
+          <br />
+        </>
+      )}
+      
+      {!!cart.length && (
+        <Button onClick={handleSell} disabled={selectedProduct}>
+          Sotish
+        </Button>
+      )}
+
+      {/* 1 */}
+      {!selectedProduct && (
+        <div>
+          <Input value={value} onChange={(e) => setValue(e.target.value)} />
+          <div>
+            {data?.data?.map((item: any) => (
+              <div
+                onClick={() => {
+                  setSelectedProduct(item);
+                  setValue("");
+                }}
+                className="border"
+                key={item.id}
+              >
+                <h3>{item.title}</h3>
+                <p>{item.quantity}</p>
+              </div>
+            ))}
           </div>
         </div>
-      ))}
-
-      <div>
-        {active ? (
-          <PartnerSell active={active} setActive={setActive} />
-        ) : (
-          <Form
-            name="basic"
-            onFinish={onFinish}
-            autoComplete="off"
-            layout="vertical"
-          >
-            <div className="flex justify-center items-center gap-5">
-              <div className="grid md:grid-cols-2 gap-x-4">
-                <Form.Item<FieldType>
-                  label="Miqdori"
-                  name="quantity"
-                  rules={[
-                    { required: true, message: "Iltimos miqdorni kiriting!" },
-                  ]}
-                >
-                  <Input />
-                </Form.Item>
-
-                <Form.Item<FieldType>
-                  label="Narxi"
-                  name="sellPrice"
-                  rules={[
-                    { required: true, message: "Iltimos narxni kiriting!" },
-                  ]}
-                >
-                  <Input />
-                </Form.Item>
-              </div>
-              <div className="mt-8">
-                <Form.Item>
-                  <Button htmlType="submit" >+</Button>
-                </Form.Item>
-              </div>
-            </div>
-          </Form>
-        )}
-      </div></>
-  )
-})
+      )}
+    </div>
+  );
+});

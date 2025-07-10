@@ -1,6 +1,6 @@
 import { product, buy } from "@/shared/keys";
 import { api } from "@/shared/lib/axios";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 
 export const useBuy = () => {

@@ -19,6 +19,8 @@ const TableView: FC<Props> = ({ data, loading }) => {
   const { getParam } = useParamsHook();
   const role = useGetRole();
   const page = getParam("page") || "1";
+  // console.log(data, "partner");
+  
 
   const columns = [
     {

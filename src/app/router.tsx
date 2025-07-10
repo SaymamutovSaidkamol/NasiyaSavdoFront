@@ -5,17 +5,20 @@ import GuestRoute from "@/shared/components/router/GuestRoute";
 import { Role } from "@/shared/const";
 import { useSelector } from "react-redux";
 import type { RootState } from "./store";
+import ProductDetail from "@/features/product/pages/ProductDetail";
 // import MainLayout from "@/layout/MainLayout";
+// import PartnerDetial from "@/features/parter/pages/detail/DetialPartner"
 
 const MainLayout = lazy(() => import("@/layout/MainLayout"));
 const Partner = lazy(() => import("@/features/parter/pages/Partner"));
 const PartnerChild = lazy(() => import("@/features/parter/pages/PartnerChild"));
+
 const Login = lazy(() => import("@/features/auth/pages/Login"));
 
-const DetialPartner = lazy(() => import("@/features/parter/pages/detail/DetialPartner"));
+const PartnerDetial = lazy(() => import("@/features/parter/pages/detail/DetialPartner"));
 const PartnerProduct = lazy(() => import("@/features/parter/pages/detail/PartnerProduct"));
 const PartnerBuy = lazy(() => import("@/features/parter/pages/detail/PartnerBuy"));
-// const PartnerSell = lazy(() => import("@/features/parter/pages/detail/PartnerSell"));
+const PartnerSell = lazy(() => import("@/features/parter/pages/detail/PartnerSell"));
 const PartnerPayments = lazy(() => import("@/features/parter/pages/detail/PartnerPayments"));
 
 const Products = lazy(() => import("@/features/product/pages/Products"));
@@ -77,24 +80,28 @@ const AppRouter = () => {
           element: <Products />,
         },
         {
+          path: "product/:id",
+          element: <ProductDetail />,
+        },
+        {
           path: "/:partner/:id",
-          element: <DetialPartner />,
+          element: <PartnerDetial />,
           children: [
             {
               index: true,
-              element: <PartnerProduct/>,
+              element: <PartnerProduct />,
             },
             {
               path: "payments",
-              element: <PartnerPayments/>
+              element: <PartnerPayments />
             },
             {
               path: "sell",
-              // element: <PartnerSell/>
+              element: <PartnerSell />
             },
             {
               path: "buy",
-              element: <PartnerBuy/>
+              element: <PartnerBuy />
             },
           ],
         },

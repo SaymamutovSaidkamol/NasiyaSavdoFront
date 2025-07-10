@@ -15,7 +15,7 @@ const Login = lazy(() => import("@/features/auth/pages/Login"));
 const DetialPartner = lazy(() => import("@/features/parter/pages/detail/DetialPartner"));
 const PartnerProduct = lazy(() => import("@/features/parter/pages/detail/PartnerProduct"));
 const PartnerBuy = lazy(() => import("@/features/parter/pages/detail/PartnerBuy"));
-const PartnerSell = lazy(() => import("@/features/parter/pages/detail/PartnerSell"));
+// const PartnerSell = lazy(() => import("@/features/parter/pages/detail/PartnerSell"));
 const PartnerPayments = lazy(() => import("@/features/parter/pages/detail/PartnerPayments"));
 
 const Products = lazy(() => import("@/features/product/pages/Products"));
@@ -90,7 +90,7 @@ const AppRouter = () => {
             },
             {
               path: "sell",
-              element: <PartnerSell/>
+              // element: <PartnerSell/>
             },
             {
               path: "buy",

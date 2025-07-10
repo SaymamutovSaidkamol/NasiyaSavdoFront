@@ -1,6 +1,6 @@
 import { partner, product, sell } from "@/shared/keys";
 import { api } from "@/shared/lib/axios";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export const useSell = () => {
   const queryClient = useQueryClient();
